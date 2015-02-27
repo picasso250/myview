@@ -28,7 +28,7 @@ run([
 			$pkey = get_pkey($table);
 		} elseif ($table = _get('table')) {
 			$pkey = get_pkey($table);
-			$sql = "SELECT*from $table $order limit 11";
+			$sql = "SELECT * FROM $table $order LIMIT 11";
 			$table_data = Service('db')->queryAll($sql);
 		}
 		render(__DIR__.'/view/index.html', compact('tables', 'table_data', 'table', 'sql', 'pkey'), LAYOUT);
@@ -37,7 +37,7 @@ run([
 		$table = _get('table');
 		$id = _get('id');
 		$pkey = get_pkey($table);
-		$row = Service('db')->queryRow("SELECT * from $table where $pkey = $id");
+		$row = Service('db')->queryRow("SELECT * FROM $table WHERE $pkey = $id");
 		$sets = [];
 		$db = Service('db');
 		foreach ($row as $key => $value) {
@@ -56,7 +56,7 @@ run([
 		$id = _get('id');
 		$pkey = get_pkey($table);
 		if ($id) {
-			$row = Service('db')->queryRow("SELECT * from $table where $pkey = $id");
+			$row = Service('db')->queryRow("SELECT * FROM $table WHERE $pkey = $id");
 		}
 		$desc = get_desc($table);
 		foreach ($desc as $d) {
