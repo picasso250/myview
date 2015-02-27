@@ -1,0 +1,6 @@
+<?php if (isset($confirm_sql)): ?>
+	<form action="/exec" method="post">
+		<textarea class="long" name="sql"><?= $confirm_sql ?></textarea>
+		<button>确认执行</button>
+	</form>
+<?php endif ?>

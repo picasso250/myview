@@ -51,6 +51,33 @@ run([
 		}
 		render('view/edit.html', compact('row', 'table', 'pkey', 'confirm_sql'), LAYOUT);
 	}],
+	['%^/insert$%', function ($params) {
+		$table = _get('table');
+		$id = _get('id');
+		$pkey = get_pkey($table);
+		if ($id) {
+			$row = Service('db')->queryRow("SELECT * from $table where $pkey = $id");
+		}
+		$desc = get_desc($table);
+		foreach ($desc as $d) {
+			$Field = $d['Field'];
+			if (filter_input(INPUT_POST, $Field.'_is_null')) {
+				$values[$Field] = null;
+			} elseif (isset($_POST[$Field])) {
+				$values[$Field] = $_POST[$Field];
+			} elseif ($id) {
+				$values[$Field] = $row[$Field];
+			}
+		}
+		$keys = implode(',', array_map(function($key) {
+			return "`$key`";
+		}, array_keys($values)));
+		$val = implode(',', array_map(function ($value) {
+			return $value === null ? 'NULL' : Service('db')->quote($value);
+		}, $values));
+		$confirm_sql = "INSERT INTO `$table` ($keys) VALUES ($val)";
+		render('view/insert.html', compact('values', 'table', 'pkey', 'confirm_sql'), LAYOUT);
+	}],
 	['%^/exec$%', function () {
 		$sql = _post('sql');
 		if ($sql) {
@@ -60,9 +87,14 @@ run([
 	}]
 ]);
 
-function get_pkey($table)
+function get_desc($table)
 {
 	$desc = Service('db')->queryAll("desc $table");
+	return $desc;
+}
+function get_pkey($table)
+{
+	$desc = get_desc($table);
 	$pkeys = array_filter($desc, function ($e) {
 		return $e['Key'] === 'PRI';
 	});
