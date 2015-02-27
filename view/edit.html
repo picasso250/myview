@@ -1,6 +1,7 @@
 <?php if (isset($confirm_sql)) include 'confirm.html' ?>
-
-<h1><?= $table ?></h1>
+<h1>
+	<a href="index?table=<?= $table ?>"><?= $table ?></a>
+</h1>
 <form method="post">
 	<?php foreach ($row as $key => $value): ?>
 		<div>
