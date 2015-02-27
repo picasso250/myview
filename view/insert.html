@@ -3,8 +3,9 @@
 <h1><?= $table ?></h1>
 <form method="post">
 	<?php foreach ($values as $key => $value): ?>
+		<div>
 		<label>
-			<?= $key ?>
+			<span class="left-label"><?= $key ?></span>
 			<input name="<?= $key ?>" value="<?= htmlspecialchars($value) ?>">
 		</label>
 		<label>
@@ -15,7 +16,7 @@
 			>
 			null
 		</label>
-		<br>
+		</div>
 	<?php endforeach ?>
 	<input type="hidden" name="table" value="<?= $table ?>">
 	<input type="hidden" name="pkey" value="<?= $pkey ?>">
