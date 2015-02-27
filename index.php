@@ -2,16 +2,17 @@
 
 include 'PHP-tiny/autoload.php';
 
-$dsn = 'mysql:host=localhost;dbname=meta';
+define('DBNAME', 'meta');
+
+$dsn = 'mysql:host=localhost;dbname='.DBNAME;
 $username = 'root';
 $password = 'root';
 Service('db', new DB($dsn, $username, $password));
 
 define('LAYOUT', 'view/layout.html');
 
-
 run([
-	['%^/$%', function () {
+	['%^/'.DBNAME.'/$%', function () {
 		$tables = Service('db')->queryColumn('show tables');
 		$order = _get('order');
 		$asc = _get('asc', 0);
@@ -33,7 +34,7 @@ run([
 		}
 		render('view/index.html', compact('tables', 'table_data', 'table', 'sql', 'pkey'), LAYOUT);
 	}],
-	['%^/edit$%', function ($params) {
+	['%^/'.DBNAME.'/edit$%', function ($params) {
 		$table = _get('table');
 		$id = _get('id');
 		$pkey = get_pkey($table);
@@ -51,7 +52,7 @@ run([
 		}
 		render('view/edit.html', compact('row', 'table', 'pkey', 'confirm_sql'), LAYOUT);
 	}],
-	['%^/insert$%', function ($params) {
+	['%^/'.DBNAME.'/insert$%', function ($params) {
 		$table = _get('table');
 		$id = _get('id');
 		$pkey = get_pkey($table);
@@ -78,12 +79,12 @@ run([
 		$confirm_sql = "INSERT INTO `$table` ($keys) VALUES ($val)";
 		render('view/insert.html', compact('values', 'table', 'pkey', 'confirm_sql'), LAYOUT);
 	}],
-	['%^/exec$%', function () {
+	['%^/'.DBNAME.'/exec$%', function () {
 		$sql = _post('sql');
 		if ($sql) {
 			$count = Service('db')->exec($sql);
 		}
-		render('view/exec.html', compact('sql', 'count'));
+		render('view/exec.html', compact('sql', 'count'), LAYOUT);
 	}]
 ]);
 
