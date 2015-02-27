@@ -42,6 +42,7 @@ run([
 		$db = Service('db');
 		foreach ($row as $key => $value) {
 			if (isset($_POST[$key]) && $_POST[$key] != $value) {
+				$row[$key] = $_POST[$key];
 				$sets[] = "`$key`=".$db->quote($_POST[$key]);
 			}
 		}
