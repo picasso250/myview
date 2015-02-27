@@ -6,7 +6,12 @@
 			<tr>
 				<?php foreach (array_keys($data[0]) as $key): ?>
 					<th>
-						<span class="order-btn" data-asc="<?= 1 - _get('asc') ?>" data-table="<?= $table ?>"><?= $key ?></span>
+						<span class="order-btn" data-asc="<?= 1 - _get('asc') ?>" data-table="<?= $table ?>" data-order="<?= $key ?>">
+							<?= $key ?>
+							<?php if (_get('order') == $key): ?>
+								<?= _get('asc') ? '↑' : '↓' ?>
+							<?php endif ?>
+						</span>
 					</th>
 				<?php endforeach ?>
 			</tr>

@@ -14,7 +14,15 @@ run([
 	}],
 	['%^/table/(?<table>\w+)$%', function ($params) {
 		$table = $params['table'];
-		$data = Service('db')->queryAll("SELECT*from $table limit 11");
+		$order = _get('order');
+		$asc = _get('asc', 0);
+		$map = ['DESC', 'ASC'];
+		if ($order) {
+			$order = "order by $order $map[$asc]";
+		} else {
+			$order = '';
+		}
+		$data = Service('db')->queryAll("SELECT*from $table $order limit 11");
 		render('view/data.html', compact('data', 'table'));
 	}]
 ]);
