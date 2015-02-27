@@ -1,9 +1,4 @@
-<?php if (isset($confirm_sql)): ?>
-	<form action="/exec" method="post">
-		<input class="long" name="sql" value="<?= htmlspecialchars($confirm_sql) ?>">
-		<button>确认执行</button>
-	</form>
-<?php endif ?>
+<?php if (isset($confirm_sql)) include 'confirm.html' ?>
 
 <h1><?= $table ?></h1>
 <form method="post">

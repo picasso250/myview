@@ -21,8 +21,8 @@
 					<td><?= htmlspecialchars($value) ?></td>
 				<?php endforeach ?>
 				<td>
-					<a href="/edit?<?= http_build_query(['table' => $table, 'act' => 'update', 'id' => $v[$pkey]]) ?>">edit</a>
-					<a href="/insert?<?= http_build_query(['table' => $table, 'act' => 'insert', 'id' => $v[$pkey]]) ?>">copy</a>
+					<a href="edit?<?= http_build_query(['table' => $table, 'act' => 'update', 'id' => $v[$pkey]]) ?>">edit</a>
+					<a href="insert?<?= http_build_query(['table' => $table, 'act' => 'insert', 'id' => $v[$pkey]]) ?>">copy</a>
 				</td>
 			</tr>
 		<?php endforeach ?>

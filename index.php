@@ -11,7 +11,7 @@ Service('db', new DB($config['dsn'], $username, $password));
 define('LAYOUT', __DIR__.'/view/layout.html');
 
 run([
-	['%^/$%', function () {
+	['%^/(index)?$%', function () {
 		$tables = Service('db')->queryColumn('show tables');
 		$order = _get('order');
 		$asc = _get('asc', 0);
