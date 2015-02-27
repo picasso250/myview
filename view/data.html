@@ -1,32 +1,30 @@
-<?php if (empty($data)): ?>
-	no data
-<?php else: ?>
-	<table>
-		<thead>
-			<tr>
-				<?php foreach (array_keys($data[0]) as $key): ?>
-					<th>
-						<span class="order-btn" data-asc="<?= 1 - _get('asc') ?>" data-table="<?= $table ?>" data-order="<?= $key ?>">
-							<?= $key ?>
-							<?php if (_get('order') == $key): ?>
-								<?= _get('asc') ? '↑' : '↓' ?>
-							<?php endif ?>
-						</span>
-					</th>
-				<?php endforeach ?>
-			</tr>
-		</thead>
-		<tbody>
-			<?php foreach ($data as $v): ?>
-				<tr>
-					<?php foreach ($v as $value): ?>
-						<td><?= $value ?></td>
-					<?php endforeach ?>
-				</tr>
-			<?php endforeach ?>
-		</tbody>
-	</table>
-<?php endif ?>
+
 <table>
-	
+	<thead>
+		<tr>
+			<?php foreach (array_keys($table_data[0]) as $key): ?>
+				<th>
+					<a class="order-btn" href="?<?= http_build_query(['asc' =>1 - _get('asc'), 'table' => $table, 'order' => $key]) ?>">
+						<?= $key ?>
+						<?php if (_get('order') == $key): ?>
+							<?= _get('asc') ? '↑' : '↓' ?>
+						<?php endif ?>
+					</a>
+				</th>
+			<?php endforeach ?>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ($table_data as $v): ?>
+			<tr>
+				<?php foreach ($v as $value): ?>
+					<td><?= htmlspecialchars($value) ?></td>
+				<?php endforeach ?>
+				<td>
+					<a href="/edit?<?= http_build_query(['table' => $table, 'act' => 'update', 'id' => $value[$pkey]]) ?>">edit</a>
+					<a href="/edit?<?= http_build_query(['table' => $table, 'act' => 'insert', 'id' => $value[$pkey]]) ?>">copy</a>
+				</td>
+			</tr>
+		<?php endforeach ?>
+	</tbody>
 </table>

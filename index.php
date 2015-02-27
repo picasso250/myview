@@ -7,13 +7,12 @@ $username = 'root';
 $password = 'root';
 Service('db', new DB($dsn, $username, $password));
 
+define('LAYOUT', 'view/layout.html');
+
+
 run([
 	['%^/$%', function () {
 		$tables = Service('db')->queryColumn('show tables');
-		render('view/index.html', compact('tables'));
-	}],
-	['%^/table/(?<table>\w+)$%', function ($params) {
-		$table = $params['table'];
 		$order = _get('order');
 		$asc = _get('asc', 0);
 		$map = ['DESC', 'ASC'];
@@ -22,7 +21,45 @@ run([
 		} else {
 			$order = '';
 		}
-		$data = Service('db')->queryAll("SELECT*from $table $order limit 11");
-		render('view/data.html', compact('data', 'table'));
-	}]
+		if ($sql = _get('sql')) {
+			preg_match('/from\s+(\w+)/i', $sql, $matches);
+			$table = $matches[1];
+			$table_data = Service('db')->queryAll($sql);
+			$pkey = get_pkey($table);
+		} elseif ($table = _get('table')) {
+			$pkey = get_pkey($table);
+			$sql = "SELECT*from $table $order limit 11";
+			$table_data = Service('db')->queryAll($sql);
+		}
+		render('view/index.html', compact('tables', 'table_data', 'table', 'sql', 'pkey'), LAYOUT);
+	}],
+	['%^/edit$%', function ($params) {
+		$table = _get('table');
+		$id = _get('id');
+		$pkey = get_pkey($table);
+		$row = Service('db')->queryRow("SELECT * from $table where $pkey = $id");
+		$sets = [];
+		foreach ($row as $key => $value) {
+			if (isset($_POST[$key]) && $_POST[$key] != $value) {
+				$sets[] = "`$key`=".$db->quoteValue($value);
+			}
+		}
+		if ($sets) {
+			$comfirm_sql = "UPDATE `$table` SET $sets where `$pkey`=".$db->quoteValue($id);
+		}
+		render('view/edit.html', compact('row', 'table', 'pkey', 'comfirm_sql'), LAYOUT);
+	}],
+	['%/']
 ]);
+
+function get_pkey($table)
+{
+	$desc = Service('db')->queryAll("desc $table");
+	$pkeys = array_filter($desc, function ($e) {
+		return $e['Key'] === 'PRI';
+	});
+	if ($pkeys) {
+		return $pkeys[0]['Field'];
+	}
+	return false;
+}

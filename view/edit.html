@@ -1,0 +1,15 @@
+<?php if ($confirm_sql): ?>
+	<form>
+		<code><?= $confirm_sql ?></code>
+		<button>确认执行</button>
+	</form>
+<?php endif ?>
+<form>
+	<?php foreach ($row as $key => $value): ?>
+		<label>
+			<?= $key ?>
+			<input name="<?= $key ?>" value="<?= htmlspecialchars($value) ?>">
+		</label>
+	<?php endforeach ?>
+	<button>修改</button>
+</form>
