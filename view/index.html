@@ -1,5 +1,5 @@
 
-<ul>
+<ul id="Side">
 	<?php foreach ($tables as $t): ?>
 		<li>
 			<a class="table-btn" href="?table=<?= $t ?>"><?= $t ?></a>
@@ -7,12 +7,14 @@
 	<?php endforeach ?>
 </ul>
 
-<form>
-	<input name="sql" value="<?= htmlspecialchars($sql) ?>">
-	<button>执行 SQL</button>
-</form>
+<div id="C">
+	<form>
+		<input class="long" name="sql" value="<?= htmlspecialchars($sql) ?>">
+		<button>执行 SQL</button>
+	</form>
 
-<?php if (empty($table_data)): ?>
-	no data
-<?php else: include 'data.html'; ?>
-<?php endif ?>
+	<?php if (empty($table_data)): ?>
+		no data
+	<?php else: include 'data.html'; ?>
+	<?php endif ?>
+</div>

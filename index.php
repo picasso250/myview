@@ -39,17 +39,25 @@ run([
 		$pkey = get_pkey($table);
 		$row = Service('db')->queryRow("SELECT * from $table where $pkey = $id");
 		$sets = [];
+		$db = Service('db');
 		foreach ($row as $key => $value) {
 			if (isset($_POST[$key]) && $_POST[$key] != $value) {
-				$sets[] = "`$key`=".$db->quoteValue($value);
+				$sets[] = "`$key`=".$db->quote($_POST[$key]);
 			}
 		}
 		if ($sets) {
-			$comfirm_sql = "UPDATE `$table` SET $sets where `$pkey`=".$db->quoteValue($id);
+			$sets = implode(',', $sets);
+			$confirm_sql = "UPDATE `$table` SET $sets WHERE `$pkey`=".$db->quote($id);
 		}
-		render('view/edit.html', compact('row', 'table', 'pkey', 'comfirm_sql'), LAYOUT);
+		render('view/edit.html', compact('row', 'table', 'pkey', 'confirm_sql'), LAYOUT);
 	}],
-	['%/']
+	['%^/exec$%', function () {
+		$sql = _post('sql');
+		if ($sql) {
+			$count = Service('db')->exec($sql);
+		}
+		render('view/exec.html', compact('sql', 'count'));
+	}]
 ]);
 
 function get_pkey($table)
