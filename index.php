@@ -2,17 +2,16 @@
 
 include 'PHP-tiny/autoload.php';
 
-define('DBNAME', 'meta');
+$config = require 'config.php';
 
-$dsn = 'mysql:host=localhost;dbname='.DBNAME;
 $username = 'root';
 $password = 'root';
-Service('db', new DB($dsn, $username, $password));
+Service('db', new DB($config['dsn'], $username, $password));
 
-define('LAYOUT', 'view/layout.html');
+define('LAYOUT', __DIR__.'/view/layout.html');
 
 run([
-	['%^/'.DBNAME.'/$%', function () {
+	['%^/$%', function () {
 		$tables = Service('db')->queryColumn('show tables');
 		$order = _get('order');
 		$asc = _get('asc', 0);
@@ -32,9 +31,9 @@ run([
 			$sql = "SELECT*from $table $order limit 11";
 			$table_data = Service('db')->queryAll($sql);
 		}
-		render('view/index.html', compact('tables', 'table_data', 'table', 'sql', 'pkey'), LAYOUT);
+		render(__DIR__.'/view/index.html', compact('tables', 'table_data', 'table', 'sql', 'pkey'), LAYOUT);
 	}],
-	['%^/'.DBNAME.'/edit$%', function ($params) {
+	['%^/edit$%', function ($params) {
 		$table = _get('table');
 		$id = _get('id');
 		$pkey = get_pkey($table);
@@ -50,9 +49,9 @@ run([
 			$sets = implode(',', $sets);
 			$confirm_sql = "UPDATE `$table` SET $sets WHERE `$pkey`=".$db->quote($id);
 		}
-		render('view/edit.html', compact('row', 'table', 'pkey', 'confirm_sql'), LAYOUT);
+		render(__DIR__.'/view/edit.html', compact('row', 'table', 'pkey', 'confirm_sql'), LAYOUT);
 	}],
-	['%^/'.DBNAME.'/insert$%', function ($params) {
+	['%^/insert$%', function ($params) {
 		$table = _get('table');
 		$id = _get('id');
 		$pkey = get_pkey($table);
@@ -77,14 +76,14 @@ run([
 			return $value === null ? 'NULL' : Service('db')->quote($value);
 		}, $values));
 		$confirm_sql = "INSERT INTO `$table` ($keys) VALUES ($val)";
-		render('view/insert.html', compact('values', 'table', 'pkey', 'confirm_sql'), LAYOUT);
+		render(__DIR__.'/view/insert.html', compact('values', 'table', 'pkey', 'confirm_sql'), LAYOUT);
 	}],
-	['%^/'.DBNAME.'/exec$%', function () {
+	['%^/exec$%', function () {
 		$sql = _post('sql');
 		if ($sql) {
 			$count = Service('db')->exec($sql);
 		}
-		render('view/exec.html', compact('sql', 'count'), LAYOUT);
+		render(__DIR__.'/view/exec.html', compact('sql', 'count'), LAYOUT);
 	}]
 ]);
 
