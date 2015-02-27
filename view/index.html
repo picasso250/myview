@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>x</title>
+	<script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.js"></script>
+	<script type="text/javascript">
+	$(function () {
+		var bindClick = function () {
+			$('.order-btn').click(function () {
+				var $this = $(this);
+				reloadTable(table, 'order='+$this.text()+'&asc='+$this.data('asc'));
+			});
+		};
+		var reloadTable = function(table, options) {
+			$('#C').load('/table/'+table+'?'+options, bindClick);
+		};
+		$('.table-btn').click(function () {
+			reloadTable($(this).text());
+		});
+	});
+	</script>
+</head>
+<body>
+
+<ul>
+	<?php foreach ($tables as $table): ?>
+		<li>
+			<span class="table-btn"><?= $table ?></span>
+		</li>
+	<?php endforeach ?>
+</ul>
+
+<div id="C"></div>
+
+</table>
+</body>
+</html>

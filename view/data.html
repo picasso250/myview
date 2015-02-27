@@ -1,0 +1,27 @@
+<?php if (empty($data)): ?>
+	no data
+<?php else: ?>
+	<table>
+		<thead>
+			<tr>
+				<?php foreach (array_keys($data[0]) as $key): ?>
+					<th>
+						<span class="order-btn" data-asc="<?= 1 - _get('asc') ?>" data-table="<?= $table ?>"><?= $key ?></span>
+					</th>
+				<?php endforeach ?>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach ($data as $v): ?>
+				<tr>
+					<?php foreach ($v as $value): ?>
+						<td><?= $value ?></td>
+					<?php endforeach ?>
+				</tr>
+			<?php endforeach ?>
+		</tbody>
+	</table>
+<?php endif ?>
+<table>
+	
+</table>
