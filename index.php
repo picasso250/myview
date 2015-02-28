@@ -56,7 +56,7 @@ run([
 			$confirm_sql = "UPDATE `$table` SET $sets WHERE `$pkey`=".$db->quote($id);
 		}
 		render(__DIR__.'/view/edit.html', compact('row', 'table', 'pkey', 'confirm_sql'), LAYOUT);
-	}],
+	}, 'is_not_read_only'],
 	['%^/insert$%', function ($params) {
 		$table = _get('table');
 		$id = _get('id');
@@ -83,16 +83,20 @@ run([
 		}, $values));
 		$confirm_sql = "INSERT INTO `$table` ($keys) VALUES ($val)";
 		render(__DIR__.'/view/insert.html', compact('values', 'table', 'pkey', 'confirm_sql'), LAYOUT);
-	}],
+	}, 'is_not_read_only'],
 	['%^/exec$%', function () {
 		$sql = _post('sql');
 		if ($sql) {
 			$count = Service('db')->exec($sql);
 		}
 		render(__DIR__.'/view/exec.html', compact('sql', 'count'), LAYOUT);
-	}]
+	}, 'is_not_read_only']
 ]);
 
+function is_not_read_only()
+{
+	return !Service('config')['readonly'];
+}
 function get_desc($table)
 {
 	$desc = Service('db')->queryAll("desc $table");
