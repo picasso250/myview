@@ -1,11 +1,28 @@
-
-<ul id="Side">
-	<?php foreach ($tables as $t): ?>
+<div id="Side">
+<h2>数据库</h2>
+<ul>
+	<?php foreach (Service('config')['dbnames'] as $db): ?>
 		<li>
-			<a class="table-btn" href="?table=<?= $t ?>"><?= $t ?></a>
+			<a href="?dbname=<?= $db ?>">
+				<?php if ($dbname === $db) echo htmlspecialchars('>') ?>
+				<?= $db ?>
+			</a>
 		</li>
 	<?php endforeach ?>
 </ul>
+
+<h2>表</h2>
+<ul>
+	<?php foreach ($tables as $t): ?>
+		<li>
+			<a class="table-btn" href="?<?= http_build_query(['table' => $t, 'dbname' => _get('dbname')]) ?>">
+				<?php if ($t === _get('table')) echo htmlspecialchars('>') ?>
+				<?= $t ?>
+			</a>
+		</li>
+	<?php endforeach ?>
+</ul>
+</div>
 
 <div id="C">
 	<form>

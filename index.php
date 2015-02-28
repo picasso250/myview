@@ -3,15 +3,20 @@
 include 'PHP-tiny/autoload.php';
 
 $config = require 'config.php';
+Service('config', $config);
 
-$username = 'root';
-$password = 'root';
-Service('db', new DB($config['dsn'], $username, $password));
+if ($dbname = _get('dbname')) {
+	setcookie('dbname', $dbname);
+} else {
+	$dbname = isset($_COOKIE['dbname']) ? $_COOKIE['dbname'] : $config['dbnames'][0];
+}
+$dsn = $config['dsn'].";dbname=$dbname";
+Service('db', new DB($dsn, $config['username'], $config['password']));
 
 define('LAYOUT', __DIR__.'/view/layout.html');
 
 run([
-	['%^/(index)?$%', function () {
+	['%^/(index)?$%', function () use ($dbname) {
 		$tables = Service('db')->queryColumn('show tables');
 		$order = _get('order');
 		$asc = _get('asc', 0);
@@ -31,7 +36,7 @@ run([
 			$sql = "SELECT * FROM $table $order LIMIT 11";
 			$table_data = Service('db')->queryAll($sql);
 		}
-		render(__DIR__.'/view/index.html', compact('tables', 'table_data', 'table', 'sql', 'pkey'), LAYOUT);
+		render(__DIR__.'/view/index.html', compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname'), LAYOUT);
 	}],
 	['%^/edit$%', function ($params) {
 		$table = _get('table');
