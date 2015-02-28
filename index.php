@@ -2,7 +2,7 @@
 
 include 'PHP-tiny/autoload.php';
 
-$config = require 'config.php';
+$config = require __DIR__.'/config.php';
 Service('config', $config);
 
 if ($dbname = _get('dbname')) {
