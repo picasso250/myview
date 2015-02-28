@@ -34,4 +34,10 @@
 		no data
 	<?php else: include 'data.html'; ?>
 	<?php endif ?>
+	<?php if ($err): ?>
+		<div class="err">
+			<?= $err[0] ?>
+			<?= htmlspecialchars($err[2]) ?>
+		</div>
+	<?php endif ?>
 </div>

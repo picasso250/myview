@@ -27,16 +27,24 @@ run([
 			$order = '';
 		}
 		if ($sql = _get('sql')) {
-			preg_match('/from\s+(\w+)/i', $sql, $matches);
-			$table = $matches[1];
-			$table_data = Service('db')->queryAll($sql);
-			$pkey = get_pkey($table);
+			if (preg_match('/from\s+(\w+)/i', $sql, $matches)) {
+				$table = $matches[1];
+				$pkey = get_pkey($table);
+			}
 		} elseif ($table = _get('table')) {
 			$pkey = get_pkey($table);
 			$sql = "SELECT * FROM `$table` $order LIMIT 11";
-			$table_data = Service('db')->queryAll($sql);
 		}
-		render(__DIR__.'/view/index.html', compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname'), LAYOUT);
+		if ($sql) {
+			$db = Service('db');
+	        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
+			$stmt = $db->prepare($sql);
+			if (!$stmt->execute()) {
+				$err = $stmt->errorInfo();
+			}
+			$table_data = $stmt->fetchAll(Pdo::FETCH_ASSOC);
+		}
+		render(__DIR__.'/view/index.html', compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname', 'err'), LAYOUT);
 	}],
 	['%^/edit$%', function ($params) {
 		$table = _get('table');
