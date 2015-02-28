@@ -52,7 +52,6 @@ run([
 				$sets[] = "`$key`=NULL";
 			} elseif (isset($_POST[$key]) && $_POST[$key] !== $row[$key]) {
 				$row[$key] = $_POST[$key];
-				var_dump($_POST[$key],$db->quote($_POST[$key]));
 				$sets[] = "`$key`=".$db->quote($_POST[$key]);
 			}
 		}
