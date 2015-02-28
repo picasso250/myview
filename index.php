@@ -22,7 +22,7 @@ run([
 		$asc = _get('asc', 0);
 		$map = ['DESC', 'ASC'];
 		if ($order) {
-			$order = "order by $order $map[$asc]";
+			$order = "ORDER BY `$order` $map[$asc]";
 		} else {
 			$order = '';
 		}
@@ -33,7 +33,7 @@ run([
 			$pkey = get_pkey($table);
 		} elseif ($table = _get('table')) {
 			$pkey = get_pkey($table);
-			$sql = "SELECT * FROM $table $order LIMIT 11";
+			$sql = "SELECT * FROM `$table` $order LIMIT 11";
 			$table_data = Service('db')->queryAll($sql);
 		}
 		render(__DIR__.'/view/index.html', compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname'), LAYOUT);
@@ -41,13 +41,18 @@ run([
 	['%^/edit$%', function ($params) {
 		$table = _get('table');
 		$id = _get('id');
+		$desc = get_desc($table, true);
 		$pkey = get_pkey($table);
 		$row = Service('db')->queryRow("SELECT * FROM $table WHERE $pkey = $id");
 		$sets = [];
 		$db = Service('db');
-		foreach ($row as $key => $value) {
-			if (isset($_POST[$key]) && $_POST[$key] != $value) {
+		foreach ($desc as $key => $d) {
+			if (filter_input(INPUT_POST, $key.'_is_null')) {
+				$row[$key] = null;
+				$sets[] = "`$key`=NULL";
+			} elseif (isset($_POST[$key]) && $_POST[$key] !== $row[$key]) {
 				$row[$key] = $_POST[$key];
+				var_dump($_POST[$key],$db->quote($_POST[$key]));
 				$sets[] = "`$key`=".$db->quote($_POST[$key]);
 			}
 		}
@@ -55,7 +60,7 @@ run([
 			$sets = implode(',', $sets);
 			$confirm_sql = "UPDATE `$table` SET $sets WHERE `$pkey`=".$db->quote($id);
 		}
-		render(__DIR__.'/view/edit.html', compact('row', 'table', 'pkey', 'confirm_sql'), LAYOUT);
+		render(__DIR__.'/view/edit.html', compact('row', 'table', 'pkey', 'confirm_sql', 'desc'), LAYOUT);
 	}, 'is_not_read_only'],
 	['%^/insert$%', function ($params) {
 		$table = _get('table');
@@ -64,9 +69,8 @@ run([
 		if ($id) {
 			$row = Service('db')->queryRow("SELECT * FROM $table WHERE $pkey = $id");
 		}
-		$desc = get_desc($table);
-		foreach ($desc as $d) {
-			$Field = $d['Field'];
+		$desc = get_desc($table, true);
+		foreach ($desc as $Field => $d) {
 			if (filter_input(INPUT_POST, $Field.'_is_null')) {
 				$values[$Field] = null;
 			} elseif (isset($_POST[$Field])) {
@@ -97,9 +101,15 @@ function is_not_read_only()
 {
 	return !Service('config')['readonly'];
 }
-function get_desc($table)
+function get_desc($table, $key = false)
 {
 	$desc = Service('db')->queryAll("desc $table");
+	if ($key) {
+		foreach ($desc as $d) {
+			$ret[$d['Field']] = $d;
+		}
+		return $ret;
+	}
 	return $desc;
 }
 function get_pkey($table)

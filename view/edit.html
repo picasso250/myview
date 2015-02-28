@@ -7,8 +7,24 @@
 		<div>
 		<label>
 			<span class="left-label"><?= $key ?></span>
-			<input name="<?= $key ?>" value="<?= htmlspecialchars($value) ?>">
+			<?php if ($desc[$key]['Type'] === 'mediumtext'): ?>
+				<textarea name="<?= $key ?>"><?= $value ?></textarea>
+			<?php else: ?>
+				<input name="<?= $key ?>" value="<?= htmlspecialchars($value) ?>">
+			<?php endif ?>
 		</label>
+		<label>
+			<input type="checkbox" name="<?= $key ?>_is_null"
+			<?php if (filter_input(INPUT_POST, $key.'_is_null')): ?>
+				checked
+			<?php endif ?>
+			>
+			null
+		</label>
+		|
+		<span>
+			<?= $desc[$key]['Type'] ?>
+		</span>
 		</div>
 	<?php endforeach ?>
 	<input type="hidden" name="table" value="<?= $table ?>">
