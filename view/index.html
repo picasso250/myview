@@ -26,9 +26,12 @@
 
 <div id="C">
 	<form>
-		<input class="long" name="sql" value="<?= htmlspecialchars($sql) ?>">
+		<textarea class="long" name="sql"><?= $sql ?></textarea>
 		<button>执行 SQL</button>
 	</form>
+	<div>
+		<a href="insert?table=<?= $table ?>">insert</a>
+	</div>
 
 	<?php if (empty($table_data)): ?>
 		no data

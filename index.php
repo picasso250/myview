@@ -35,6 +35,7 @@ run([
 			$pkey = get_pkey($table);
 			$sql = "SELECT * FROM `$table` $order LIMIT 11";
 		}
+		$err = null;
 		if ($sql) {
 			$db = Service('db');
 	        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
@@ -84,6 +85,8 @@ run([
 				$values[$Field] = $_POST[$Field];
 			} elseif ($id) {
 				$values[$Field] = $row[$Field];
+			} else {
+				$values[$Field] = '';
 			}
 		}
 		$keys = implode(',', array_map(function($key) {
