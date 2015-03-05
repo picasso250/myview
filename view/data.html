@@ -15,15 +15,21 @@
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach ($table_data as $v): ?>
+		<?php foreach ($table_data as $row): ?>
 			<tr>
-				<?php foreach ($v as $value): ?>
-					<td><?= htmlspecialchars($value) ?></td>
+				<?php foreach ($row as $key => $value): ?>
+					<td>
+					<?php if (isset($fkt[$table][$key])): $v = $fkt[$table][$key]; ?>
+						<a href="?<?= http_build_query(['sql' => "SELECT * FROM `{$v[0]}` WHERE `$v[1]`=".Service('db')->quote($value)]).'LIMIT 1' ?>"><?= htmlspecialchars($value) ?></a>
+					<?php else: ?>
+						<?= htmlspecialchars($value) ?>
+					<?php endif ?>
+					</td>
 				<?php endforeach ?>
 				<td>
 				<?php if (!Service('config')['readonly'] && $table): ?>
-					<a href="edit?<?= http_build_query(['table' => $table, 'id' => $v[$pkey]]) ?>">edit</a>
-					<a href="insert?<?= http_build_query(['table' => $table, 'id' => $v[$pkey]]) ?>">copy</a>
+					<a href="edit?<?= http_build_query(['table' => $table, 'id' => $row[$pkey]]) ?>">edit</a>
+					<a href="insert?<?= http_build_query(['table' => $table, 'id' => $row[$pkey]]) ?>">copy</a>
 				<?php endif ?>
 				</td>
 			</tr>

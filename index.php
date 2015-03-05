@@ -45,7 +45,8 @@ run([
 			}
 			$table_data = $stmt->fetchAll(Pdo::FETCH_ASSOC);
 		}
-		render(__DIR__.'/view/index.html', compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname', 'err'), LAYOUT);
+		$fkt = build_forein_key_table(Service('config')['foreignkeys']);
+		render(__DIR__.'/view/index.html', compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname', 'err', 'fkt'), LAYOUT);
 	}],
 	['%^/edit$%', function ($params) {
 		$table = _get('table');
@@ -132,4 +133,16 @@ function get_pkey($table)
 		return $pkeys[0]['Field'];
 	}
 	return false;
+}
+
+function build_forein_key_table($config)
+{
+	foreach ($config as $real => $shadows) {
+		$real = explode('.', $real);
+		foreach ($shadows as $shadow) {
+			list($st, $sk) = explode('.', $shadow);
+			$fkt[$st][$sk] = $real;
+		}
+	}
+	return $fkt;
 }
