@@ -5,10 +5,9 @@ include 'PHP-tiny/autoload.php';
 $config = require __DIR__.'/config.php';
 Service('config', new ArrayObject($config));
 
-if ($dbname = _get('dbname')) {
-	setcookie('dbname', $dbname);
-} else {
-	$dbname = isset($_COOKIE['dbname']) ? $_COOKIE['dbname'] : key($config['dbnames']);
+$dbname = _get('dbname');
+if (empty($dbname)) {
+	$dbname = key($config['dbnames']);
 }
 $conf = $config['dbnames'][$dbname];
 Service('db', new DB($conf['dsn'], $conf['username'], $conf['password']));
@@ -149,4 +148,10 @@ function build_forein_key_table($config)
 		}
 	}
 	return $fkt;
+}
+
+function append_query($querys)
+{
+	$g = $_GET;
+	return http_build_query(array_merge($g, $querys));
 }
