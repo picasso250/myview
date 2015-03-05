@@ -21,7 +21,7 @@
 					<td><?= htmlspecialchars($value) ?></td>
 				<?php endforeach ?>
 				<td>
-				<?php if (!Service('config')['readonly']): ?>
+				<?php if (!Service('config')['readonly'] && $table): ?>
 					<a href="edit?<?= http_build_query(['table' => $table, 'id' => $v[$pkey]]) ?>">edit</a>
 					<a href="insert?<?= http_build_query(['table' => $table, 'id' => $v[$pkey]]) ?>">copy</a>
 				<?php endif ?>

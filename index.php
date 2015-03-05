@@ -113,7 +113,7 @@ function is_not_read_only()
 }
 function get_desc($table, $key = false)
 {
-	$desc = Service('db')->queryAll("desc $table");
+	$desc = Service('db')->queryAll("DESC `$table`");
 	if ($key) {
 		foreach ($desc as $d) {
 			$ret[$d['Field']] = $d;
