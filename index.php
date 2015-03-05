@@ -27,7 +27,7 @@ run([
 			$order = '';
 		}
 		if ($sql = _get('sql')) {
-			if (preg_match('/from\s+(\w+)/i', $sql, $matches)) {
+			if (preg_match('/from\s+`?(\w+)`?/i', $sql, $matches)) {
 				$table = $matches[1];
 				$pkey = get_pkey($table);
 			}
