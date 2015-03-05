@@ -3,7 +3,7 @@
 include 'PHP-tiny/autoload.php';
 
 $config = require __DIR__.'/config.php';
-Service('config', $config);
+Service('config', new ArrayObject($config));
 
 if ($dbname = _get('dbname')) {
 	setcookie('dbname', $dbname);
@@ -137,6 +137,9 @@ function get_pkey($table)
 
 function build_forein_key_table($config)
 {
+	if (empty($config)) {
+		return $fkt;
+	}
 	foreach ($config as $real => $shadows) {
 		$real = explode('.', $real);
 		foreach ($shadows as $shadow) {
