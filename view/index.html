@@ -27,6 +27,8 @@
 <div id="C">
 	<form>
 		<textarea class="long" name="sql"><?= $sql ?></textarea>
+		<input type="hidden" name="dbname" value="<?= $dbname ?>">
+		<input type="hidden" name="table" value="<?= $table ?>">
 		<button>执行 SQL</button>
 	</form>
 	<div>

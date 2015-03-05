@@ -20,6 +20,7 @@
 		</label>
 		</div>
 	<?php endforeach ?>
+	<input type="hidden" name="dbname" value="<?= _get('dbname') ?>">
 	<input type="hidden" name="table" value="<?= $table ?>">
 	<input type="hidden" name="pkey" value="<?= $pkey ?>">
 	<button>准备修改</button>
