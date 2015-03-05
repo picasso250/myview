@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
 	<title>MyAdmin</title>
 	<style type="text/css">
 	.long {
@@ -27,7 +28,24 @@
 		border: 1px solid rgb(184, 87, 87);
 		padding: 8px;
 	}
+	.json-viewer {
+		cursor: pointer;
+	}
 	</style>
+	<script type="text/javascript" src="jquery-2.0.3.js"></script>
+	<script type="text/javascript">
+	$(function () {
+		$('.json-viewer').click(function () {
+			var $this = $(this);
+			var isPretty = 1 - $this.data('is-pretty');
+			$this.data('is-pretty', isPretty);
+			var map = [0,2];
+			var code = '<pre>'+JSON.stringify($this.data('plain'), null, map[isPretty])+'</pre>';
+			console.log(code);
+			$this.html(code);
+		});
+	});
+	</script>
 </head>
 <body>
 <h1>

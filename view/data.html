@@ -1,4 +1,3 @@
-
 <table>
 	<thead>
 		<tr>
@@ -18,7 +17,14 @@
 		<?php foreach ($table_data as $row): ?>
 			<tr>
 				<?php foreach ($row as $key => $value): ?>
-					<td>
+					<td
+						<?php if ($value && ($value[0] === '[' || $value[0] === '{') && ($o = json_decode($value))): ?>
+							title="click to show pretty json"
+							class="json-viewer"
+							data-plain="<?= htmlspecialchars($value) ?>"
+							data-is-pretty="0"
+						<?php endif ?>
+					>
 					<?php if (isset($fkt[$table][$key])): $v = $fkt[$table][$key]; ?>
 						<a href="?<?= http_build_query(['sql' => "SELECT * FROM `{$v[0]}` WHERE `$v[1]`=".Service('db')->quote($value)]).'LIMIT 1' ?>"><?= htmlspecialchars($value) ?></a>
 					<?php else: ?>
