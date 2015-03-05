@@ -1,0 +1,17 @@
+<?php
+
+return array(
+	'dbnames' => [
+		'wtf' => [
+			'dsn' => 'mysql:host=localhost;dbname=wtf',
+			'username' => 'root',
+			'password' => '',
+		],
+	],
+	'readonly' => false,
+	'foreignkeys' => [
+		'user.id' => [
+			'book.user_id',
+		],
+	]
+);
