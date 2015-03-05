@@ -1,7 +1,7 @@
 <div id="Side">
 <h2>数据库</h2>
 <ul>
-	<?php foreach (Service('config')['dbnames'] as $db): ?>
+	<?php foreach (Service('config')['dbnames'] as $db => $_): ?>
 		<li>
 			<a href="?dbname=<?= $db ?>">
 				<?php if ($dbname === $db) echo htmlspecialchars('>') ?>

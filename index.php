@@ -8,10 +8,10 @@ Service('config', new ArrayObject($config));
 if ($dbname = _get('dbname')) {
 	setcookie('dbname', $dbname);
 } else {
-	$dbname = isset($_COOKIE['dbname']) ? $_COOKIE['dbname'] : $config['dbnames'][0];
+	$dbname = isset($_COOKIE['dbname']) ? $_COOKIE['dbname'] : key($config['dbnames']);
 }
-$dsn = $config['dsn'].";dbname=$dbname";
-Service('db', new DB($dsn, $config['username'], $config['password']));
+$conf = $config['dbnames'][$dbname];
+Service('db', new DB($conf['dsn'], $conf['username'], $conf['password']));
 
 define('LAYOUT', __DIR__.'/view/layout.html');
 
@@ -46,7 +46,8 @@ run([
 			$table_data = $stmt->fetchAll(Pdo::FETCH_ASSOC);
 		}
 		$fkt = build_forein_key_table(Service('config')['foreignkeys']);
-		render(__DIR__.'/view/index.html', compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname', 'err', 'fkt'), LAYOUT);
+		$data = compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname', 'err', 'fkt');
+		render(__DIR__.'/view/index.html', $data, LAYOUT);
 	}],
 	['%^/edit$%', function ($params) {
 		$table = _get('table');
