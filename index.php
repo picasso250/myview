@@ -1,5 +1,8 @@
 <?php
 
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__.'/php_errors.log');
+
 include 'PHP-tiny/autoload.php';
 
 $config = require __DIR__.'/config.php';
@@ -25,6 +28,7 @@ run([
 		} else {
 			$order = '';
 		}
+		try {
 		if ($sql = _get('sql')) {
 			if (preg_match('/from\s+`?(\w+)`?/i', $sql, $matches)) {
 				$table = $matches[1];
@@ -37,12 +41,14 @@ run([
 		$err = null;
 		if ($sql) {
 			$db = Service('db');
-	        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
 			$stmt = $db->prepare($sql);
 			if (!$stmt->execute()) {
 				$err = $stmt->errorInfo();
 			}
 			$table_data = $stmt->fetchAll(Pdo::FETCH_ASSOC);
+		}
+		} catch (PDOException $e) {
+			$err = $e->errorInfo;
 		}
 		$fkt = build_forein_key_table(Service('config')['foreignkeys']);
 		$data = compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname', 'err', 'fkt');

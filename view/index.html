@@ -15,7 +15,7 @@
 <ul>
 	<?php foreach ($tables as $t): ?>
 		<li>
-			<a class="table-btn" href="?<?= append_query(['table' => $t, 'dbname' => _get('dbname')]) ?>">
+			<a class="table-btn" href="?<?= http_build_query(['table' => $t, 'dbname' => _get('dbname')]) ?>">
 				<?php if ($t === _get('table')) echo htmlspecialchars('>') ?>
 				<?= $t ?>
 			</a>
@@ -26,9 +26,9 @@
 
 <div id="C">
 	<form>
-		<textarea class="long" name="sql"><?= $sql ?></textarea>
 		<input type="hidden" name="dbname" value="<?= $dbname ?>">
 		<input type="hidden" name="table" value="<?= $table ?>">
+		<textarea class="long" name="sql"><?= $sql ?></textarea>
 		<button>执行 SQL</button>
 	</form>
 	<div>
