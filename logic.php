@@ -47,3 +47,26 @@ function append_query($querys)
 	$g = $_GET;
 	return http_build_query(array_merge($g, $querys));
 }
+
+function is_read($sql)
+{
+	$sql = trim($sql);
+	if (preg_match('/^(select|desc|explain)\b/i', $sql)) {
+		return true;
+	}
+	return false;
+}
+
+function build_table_sql($table)
+{
+	$order = _get('order');
+	$asc = _get('asc', 0);
+	$map = ['DESC', 'ASC'];
+	if ($order) {
+		$order = "ORDER BY `$order` $map[$asc]";
+	} else {
+		$order = '';
+	}
+	$sql = "SELECT * FROM `$table` $order LIMIT 111";
+	return $sql;
+}

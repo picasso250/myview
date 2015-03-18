@@ -4,4 +4,9 @@
 		影响行数
 		<?= $count ?>
 	</div>
+	<?php if ($errorInfo): ?>
+		<div>
+			<?= $errorInfo[2] ?>
+		</div>
+	<?php endif ?>
 </div>

@@ -27,7 +27,6 @@
 <div id="C">
 	<form>
 		<input type="hidden" name="dbname" value="<?= $dbname ?>">
-		<input type="hidden" name="table" value="<?= $table ?>">
 		<textarea class="long" name="sql"><?= $sql ?></textarea>
 		<button>执行 SQL</button>
 	</form>
@@ -35,14 +34,13 @@
 		<a href="insert?table=<?= $table ?>">insert</a>
 	</div>
 
-	<?php if (empty($table_data)): ?>
-		no data
-	<?php else: include 'data.html'; ?>
-	<?php endif ?>
 	<?php if ($err): ?>
 		<div class="err">
 			<?= $err[0] ?>
 			<?= htmlspecialchars($err[2]) ?>
 		</div>
+	<?php elseif (empty($table_data)): ?>
+		no data
+	<?php else: include 'data.html'; ?>
 	<?php endif ?>
 </div>

@@ -1,54 +1,35 @@
 <?php
 function index() {
 	$tables = Service('db')->queryColumn('show tables');
-	if ($sql = _get('sql')) {
+	$sql = null;
+	$table = _get('table');
+	if ($table) {
+		$sql = build_table_sql($table);
+		$pkey = get_pkey($table);
+	}
+	if (empty($sql)) {
+		$sql = _get('sql');
 		if (preg_match('/from\s+`?(\w+)`?/i', $sql, $matches)) {
 			$table = $matches[1];
 			$pkey = get_pkey($table);
 		}
-	} else {
-		$sql = '';
 	}
-	try {
-	$err = null;
-	$rowCount = 0;
-	if ($sql) {
-		$db = Service('db');
-		$stmt = $db->prepare($sql);
-		if (!$stmt->execute()) {
-			$err = $stmt->errorInfo();
+	if (empty($sql) || is_read($sql)) {
+		$err = null;
+		try {
+			$table_data = $sql ? Service('db')->queryAll($sql) : [];
+		} catch (PdoException $e) {
+			$err = $e->errorInfo;
 		}
-		if (is_read($sql)) {
-			$table_data = $stmt->fetchAll(Pdo::FETCH_ASSOC);
-		} else {
-			$rowCount = $stmt->rowCount();
-		}
-	}
-	} catch (PDOException $e) {
-		$err = $e->errorInfo;
-	}
-	$fkt = build_forein_key_table(Service('config')['foreignkeys']);
-	$data = compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname', 'err', 'fkt', 'rowCount');
-	render(__DIR__.'/view/index.html', $data, LAYOUT);
-}
-function table() {
-	$tables = Service('db')->queryColumn('show tables');
-	$order = _get('order');
-	$asc = _get('asc', 0);
-	$map = ['DESC', 'ASC'];
-	if ($order) {
-		$order = "ORDER BY `$order` $map[$asc]";
+		$fkt = build_forein_key_table(Service('config')['foreignkeys']);
+		$dbname = Service('dbname');
+		$data = compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname', 'err', 'fkt', 'rowCount');
+		render(__DIR__.'/view/index.html', $data, LAYOUT);
 	} else {
-		$order = '';
+		exec_sql();
 	}
-	$pkey = get_pkey($table);
-	$sql = "SELECT * FROM `$table` $order LIMIT 111";
-	$db = Service('db');
-	$table_data = $db->queryAll($sql);
-	$fkt = build_forein_key_table(Service('config')['foreignkeys']);
-	$data = compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname', 'err', 'fkt', 'rowCount');
-	render(__DIR__.'/view/index.html', $data, LAYOUT);
 }
+
 function edit($params) {
 	$table = _get('table');
 	$id = _get('id');
@@ -101,9 +82,14 @@ function insert($params) {
 	render(__DIR__.'/view/insert.html', compact('values', 'table', 'pkey', 'confirm_sql'), LAYOUT);
 }
 function exec_sql() {
-	$sql = _post('sql');
+	$sql = _req('sql');
+	$errorInfo = null;
 	if ($sql) {
-		$count = Service('db')->exec($sql);
+		try {
+			$count = Service('db')->exec($sql);
+		} catch (PdoException $e) {
+			$errorInfo = $e->errorInfo();
+		}
 	}
-	render(__DIR__.'/view/exec.html', compact('sql', 'count'), LAYOUT);
+	render(__DIR__.'/view/exec.html', compact('sql', 'count', $errorInfo), LAYOUT);
 }

@@ -10,7 +10,7 @@ include 'logic.php';
 $config = require __DIR__.'/config.php';
 Service('config', new ArrayObject($config));
 
-$dbname = _get('dbname');
+$dbname = _req('dbname');
 if (empty($dbname)) {
 	$dbname = key($config['dbnames']);
 }
