@@ -1,12 +1,13 @@
 <div>
 	<code><?= $sql ?></code>
-	<div>
-		影响行数
-		<?= $count ?>
-	</div>
 	<?php if ($errorInfo): ?>
-		<div>
+		<div class="err">
 			<?= $errorInfo[2] ?>
+		</div>
+	<?php else: ?>
+		<div>
+			影响行数
+			<?= $count ?>
 		</div>
 	<?php endif ?>
 </div>

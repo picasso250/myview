@@ -81,6 +81,7 @@ function insert($params) {
 	$confirm_sql = "INSERT INTO `$table` ($keys) VALUES ($val)";
 	render(__DIR__.'/view/insert.html', compact('values', 'table', 'pkey', 'confirm_sql'), LAYOUT);
 }
+
 function exec_sql() {
 	$sql = _req('sql');
 	$errorInfo = null;
@@ -88,8 +89,8 @@ function exec_sql() {
 		try {
 			$count = Service('db')->exec($sql);
 		} catch (PdoException $e) {
-			$errorInfo = $e->errorInfo();
+			$errorInfo = $e->errorInfo;
 		}
 	}
-	render(__DIR__.'/view/exec.html', compact('sql', 'count', $errorInfo), LAYOUT);
+	render(__DIR__.'/view/exec.html', compact('sql', 'count', 'errorInfo'), LAYOUT);
 }
