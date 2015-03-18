@@ -1,7 +1,7 @@
-<?php include 'confirm.html' ?>
+<?php include 'confirm.html'; $dbname = Service('dbname'); ?>
 
 <h1>
-	<a href="index?table=<?= $table ?>"><?= $table ?></a>
+	<a href="index?<?= http_build_query(compact('table', 'dbname')) ?>"><?= $table ?></a>
 </h1>
 <form method="post">
 	<?php foreach ($values as $key => $value): ?>
