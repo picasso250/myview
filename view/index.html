@@ -30,9 +30,11 @@
 		<textarea class="long" name="sql"><?= $sql ?></textarea>
 		<button>执行 SQL</button>
 	</form>
+	<?php if (is_not_read_only()): ?>
 	<div>
 		<a href="insert?<?= http_build_query(compact('table', 'dbname')) ?>">insert</a>
 	</div>
+	<?php endif ?>
 
 	<?php if ($err): ?>
 		<div class="err">

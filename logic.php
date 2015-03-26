@@ -57,7 +57,7 @@ function is_read($sql)
 	return false;
 }
 
-function build_table_sql($table)
+function build_table_sql($table, $where = null)
 {
 	$order = _get('order');
 	$asc = _get('asc', 0);
@@ -67,6 +67,18 @@ function build_table_sql($table)
 	} else {
 		$order = '';
 	}
-	$sql = "SELECT * FROM `$table` $order LIMIT 111";
+	$where_str = '';
+	$db = Service('db');
+	if ($where) {
+		$where = array_filter($where, function ($v) {
+			return $v !== '';
+		});
+		$where_str = array();
+		foreach ($where as $key => $value) {
+			$where_str[] = "`$key`=".$db->quote($value);
+		}
+		$where_str = $where_str ? 'WHERE '.implode(' AND ', $where_str) : '';
+	}
+	$sql = "SELECT * FROM `$table` $where_str $order LIMIT 111";
 	return $sql;
 }

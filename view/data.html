@@ -3,6 +3,13 @@
 		<tr>
 			<?php foreach (array_keys($table_data[0]) as $key): ?>
 				<th>
+					<input class="where-input" name="where[<?= $key ?>]" value="<?= isset($where[$key]) && $where[$key] !== '' ? $where[$key] : '' ?>">
+				</th>
+			<?php endforeach ?>
+		</tr>
+		<tr>
+			<?php foreach (array_keys($table_data[0]) as $key): ?>
+				<th>
 					<a class="order-btn" href="?<?= append_query(['asc' =>1 - _get('asc'), 'table' => $table, 'order' => $key]) ?>">
 						<?= $key ?>
 						<?php if (_get('order') == $key): ?>
@@ -42,3 +49,21 @@
 		<?php endforeach ?>
 	</tbody>
 </table>
+
+<script type="text/javascript">
+	$(function () {
+		var wi = $('.where-input').on('keypress', function (e) {
+			if (e.charCode === 13) {
+				var str = [];
+				wi.each(function (i, input) {
+					var $input = $(input);
+					var k = encodeURIComponent($input.attr('name'));
+					var v = encodeURIComponent($input.val());
+					str.push(k+'='+v);
+				});
+				var query = str.join('&');
+				window.location.href = '?table=<?= $table ?>&'+query;
+			};
+		})
+	})
+</script>

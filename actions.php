@@ -3,8 +3,9 @@ function index() {
 	$tables = Service('db')->queryColumn('show tables');
 	$sql = null;
 	$table = _get('table');
+	$where = _get('where', array());
 	if ($table) {
-		$sql = build_table_sql($table);
+		$sql = build_table_sql($table, $where);
 		$pkey = get_pkey($table);
 	}
 	if (empty($sql)) {
@@ -17,13 +18,13 @@ function index() {
 	if (empty($sql) || is_read($sql)) {
 		$err = null;
 		try {
-			$table_data = $sql ? Service('db')->queryAll($sql) : [];
+			$table_data = $sql ? Service('db')->queryAll($sql, $where) : [];
 		} catch (PdoException $e) {
 			$err = $e->errorInfo;
 		}
 		$fkt = build_forein_key_table(Service('config')['foreignkeys']);
 		$dbname = Service('dbname');
-		$data = compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname', 'err', 'fkt', 'rowCount');
+		$data = compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname', 'err', 'fkt', 'rowCount', 'where');
 		render(__DIR__.'/view/index.html', $data, LAYOUT);
 	} else {
 		exec_sql();
