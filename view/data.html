@@ -62,7 +62,7 @@
 					str.push(k+'='+v);
 				});
 				var query = str.join('&');
-				window.location.href = '?table=<?= $table ?>&'+query;
+				window.location.href = '?dbname=<?= $dbname ?>&table=<?= $table ?>&'+query;
 			};
 		})
 	})
