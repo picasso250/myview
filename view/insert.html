@@ -3,7 +3,7 @@
 <h1>
 	<a href="index?<?= http_build_query(compact('table', 'dbname')) ?>"><?= $table ?></a>
 </h1>
-<form method="post">
+<form method="post" action="?dbname=<?= _get('dbname') ?>">
 	<?php foreach ($values as $key => $value): ?>
 		<div>
 		<label>
