@@ -32,8 +32,8 @@
 							data-is-pretty="0"
 						<?php endif ?>
 					>
-					<?php if (isset($fkt[$table][$key])): $v = $fkt[$table][$key]; ?>
-						<a href="?<?= append_query(['sql' => "SELECT * FROM `{$v[0]}` WHERE `$v[1]`=".Service('db')->quote($value)]).'LIMIT 1' ?>"><?= htmlspecialchars($value) ?></a>
+					<?php if (isset($fkt[$key])): ?>
+						<a href="?<?= build_forein_key_query($fkt[$key], $value) ?>"><?= htmlspecialchars($value) ?></a>
 					<?php else: ?>
 						<?= htmlspecialchars($value) ?>
 					<?php endif ?>

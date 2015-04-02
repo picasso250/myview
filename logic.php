@@ -27,19 +27,12 @@ function get_pkey($table)
 	return false;
 }
 
-function build_forein_key_table($config)
+function build_forein_key_query($dest, $value)
 {
-	if (empty($config)) {
-		return $fkt;
-	}
-	foreach ($config as $real => $shadows) {
-		$real = explode('.', $real);
-		foreach ($shadows as $shadow) {
-			list($st, $sk) = explode('.', $shadow);
-			$fkt[$st][$sk] = $real;
-		}
-	}
-	return $fkt;
+	list($dbname, $table, $field) = explode('.', $dest);
+	$query = compact('dbname', 'table');
+	$query['where'][$field] = $value;
+	return http_build_query($query);
 }
 
 function append_query($querys)

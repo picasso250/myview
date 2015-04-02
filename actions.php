@@ -22,7 +22,7 @@ function index() {
 		} catch (PdoException $e) {
 			$err = $e->errorInfo;
 		}
-		$fkt = build_forein_key_table(Service('config')['foreignkeys']);
+		$fkt = (Service('config')['foreignkeys']);
 		$dbname = Service('dbname');
 		$data = compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname', 'err', 'fkt', 'rowCount', 'where');
 		render(__DIR__.'/view/index.html', $data, LAYOUT);
