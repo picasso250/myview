@@ -1,6 +1,12 @@
 <?php
+
+namespace action;
+
 function index() {
-	$tables = Service('db')->queryColumn('show tables');
+	global $db;
+	global $config;
+	global $dbname;
+	$tables = $db->queryColumn('show tables');
 	$sql = null;
 	$table = _get('table');
 	$where = _get('where', array());
@@ -18,12 +24,12 @@ function index() {
 	if (empty($sql) || is_read($sql)) {
 		$err = null;
 		try {
-			$table_data = $sql ? Service('db')->queryAll($sql, $where) : [];
+			$table_data = $sql ? $db->queryAll($sql, $where) : [];
 		} catch (PdoException $e) {
 			$err = $e->errorInfo;
 		}
-		$fkt = (Service('config')['foreignkeys']);
-		$dbname = Service('dbname');
+		$fkt = ($config['foreignkeys']);
+		$dbname = $dbname;
 		$data = compact('tables', 'table_data', 'table', 'sql', 'pkey', 'dbname', 'err', 'fkt', 'rowCount', 'where');
 		render(__DIR__.'/view/index.html', $data, LAYOUT);
 	} else {
