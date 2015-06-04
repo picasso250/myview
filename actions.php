@@ -32,8 +32,8 @@ function index() {
 }
 
 function edit($params) {
-	$table = _get('table');
-	$id = _get('id');
+	$table = _req('table');
+	$id = _req('id');
 	$desc = get_desc($table, true);
 	$pkey = get_pkey($table);
 	$row = Service('db')->queryRow("SELECT * FROM $table WHERE $pkey = $id");

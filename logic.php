@@ -44,7 +44,7 @@ function append_query($querys)
 function is_read($sql)
 {
 	$sql = trim($sql);
-	if (preg_match('/^(select|desc|explain)\b/i', $sql)) {
+	if (preg_match('/(\(*select|desc|explain|show)\b/i', $sql)) {
 		return true;
 	}
 	return false;
