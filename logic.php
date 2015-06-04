@@ -2,11 +2,13 @@
 
 function is_not_read_only()
 {
-	return !Service('config')['readonly'];
+	global $config;
+	return !$config['readonly'];
 }
 function get_desc($table, $key = false)
 {
-	$desc = Service('db')->queryAll("DESC `$table`");
+	global $db;
+	$desc = $db->queryAll("DESC `$table`");
 	if ($key) {
 		foreach ($desc as $d) {
 			$ret[$d['Field']] = $d;
@@ -52,6 +54,7 @@ function is_read($sql)
 
 function build_table_sql($table, $where = null)
 {
+	global $db;
 	$order = _get('order');
 	$asc = _get('asc', 0);
 	$map = ['DESC', 'ASC'];
@@ -61,7 +64,6 @@ function build_table_sql($table, $where = null)
 		$order = '';
 	}
 	$where_str = '';
-	$db = Service('db');
 	if ($where) {
 		$where = array_filter($where, function ($v) {
 			return $v !== '';

@@ -10,7 +10,7 @@ function echo_json($code, $msg = 'ok')
     }
     echo json_encode($res);
 }
-function render($data = [])
+function render($_inner_, $data = [])
 {
     extract($data);
     include "view/layout.html";

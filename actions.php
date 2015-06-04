@@ -38,13 +38,14 @@ function index() {
 }
 
 function edit($params) {
+	global $db;
 	$table = _req('table');
 	$id = _req('id');
 	$desc = get_desc($table, true);
 	$pkey = get_pkey($table);
-	$row = Service('db')->queryRow("SELECT * FROM $table WHERE $pkey = $id");
+	$row = $db->queryRow("SELECT * FROM $table WHERE $pkey = $id");
 	$sets = [];
-	$db = Service('db');
+	$db = $db;
 	foreach ($desc as $key => $d) {
 		if (filter_input(INPUT_POST, $key.'_is_null')) {
 			$row[$key] = null;
@@ -61,11 +62,12 @@ function edit($params) {
 	render(__DIR__.'/view/edit.html', compact('row', 'table', 'pkey', 'confirm_sql', 'desc'), LAYOUT);
 }
 function insert($params) {
+	global $db;
 	$table = _get('table');
 	$id = _get('id');
 	$pkey = get_pkey($table);
 	if ($id) {
-		$row = Service('db')->queryRow("SELECT * FROM $table WHERE $pkey = $id");
+		$row = $db->queryRow("SELECT * FROM $table WHERE $pkey = $id");
 	}
 	$desc = get_desc($table, true);
 	foreach ($desc as $Field => $d) {
@@ -83,18 +85,19 @@ function insert($params) {
 		return "`$key`";
 	}, array_keys($values)));
 	$val = implode(',', array_map(function ($value) {
-		return $value === null ? 'NULL' : Service('db')->quote($value);
+		return $value === null ? 'NULL' : $db->quote($value);
 	}, $values));
 	$confirm_sql = "INSERT INTO `$table` ($keys) VALUES ($val)";
 	render(__DIR__.'/view/insert.html', compact('values', 'table', 'pkey', 'confirm_sql'), LAYOUT);
 }
 
 function exec_sql() {
+	global $db;
 	$sql = _req('sql');
 	$errorInfo = null;
 	if ($sql) {
 		try {
-			$count = Service('db')->exec($sql);
+			$count = $db->exec($sql);
 		} catch (PdoException $e) {
 			$errorInfo = $e->errorInfo;
 		}

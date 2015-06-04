@@ -3,6 +3,7 @@
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__.'/php_errors.log');
 
+include 'xiaochi-db/src/DB.php';
 include 'lib.php';
 include 'actions.php';
 include 'logic.php';
@@ -16,7 +17,7 @@ if (empty($dbname)) {
 	$dbname = key($config['dbnames']);
 }
 $conf = $config['dbnames'][$dbname];
-$db = new DB($conf['dsn'], $conf['username'], $conf['password']);
+$db = new xiaochi\DB($conf['dsn'], $conf['username'], $conf['password']);
 
 if (isset($_COOKIE['vk'])) { // visit key
     $vk = $_COOKIE['vk'];
