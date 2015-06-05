@@ -1,0 +1,16 @@
+<table>
+<thead>
+	<tr>
+		<td>访问次数</td>
+		<td>UA</td>
+		<td>IP</td>
+	</tr>
+</thead>
+<?php foreach ($info as $vk => $value): ?>
+	<tr>
+		<td><?= $value['cnt'] ?></td>
+		<td><?= htmlspecialchars($value['ua']) ?></td>
+		<td><?= long2ip($value['ip']) ?></td>
+	</tr>
+<?php endforeach ?>
+</table>

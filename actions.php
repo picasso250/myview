@@ -104,3 +104,8 @@ function exec_sql() {
 	}
 	render(__DIR__.'/view/exec.html', compact('sql', 'count', 'errorInfo'), LAYOUT);
 }
+function visit()
+{
+	$info = get_visit_info();
+	render(__DIR__.'/view/visit.html', compact('info', 'count', 'errorInfo'), LAYOUT);
+}

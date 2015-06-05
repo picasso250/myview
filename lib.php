@@ -53,3 +53,13 @@ function _req($name, $default = null)
 {
     return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
 }
+function get_visit_info()
+{
+    $f = 'runtime/visit-'.date('Ymd').'.json';
+    if (is_file($f)) {
+        $info = unserialize(file_get_contents($f));
+    } else {
+        $info = array();
+    }
+    return $info;
+}

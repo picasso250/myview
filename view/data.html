@@ -40,7 +40,7 @@
 					</td>
 				<?php endforeach ?>
 				<td>
-				<?php if (!Service('config')['readonly'] && $table): ?>
+				<?php if (!$GLOBALS['config']['readonly'] && $table): ?>
 					<a href="edit?<?= append_query(['table' => $table, 'id' => $row[$pkey]]) ?>">edit</a>
 					<a href="insert?<?= append_query(['table' => $table, 'id' => $row[$pkey]]) ?>">copy</a>
 				<?php endif ?>
