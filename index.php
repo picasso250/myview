@@ -19,12 +19,7 @@ if (empty($dbname)) {
 $conf = $config['dbnames'][$dbname];
 $db = new xiaochi\DB($conf['dsn'], $conf['username'], $conf['password']);
 
-if (isset($_COOKIE['vk'])) { // visit key
-    $vk = $_COOKIE['vk'];
-} else {
-    $vk = 'k'.md5($_SERVER['HTTP_USER_AGENT'].uniqid());
-    setcookie('vk', $vk, time()+3600*24*365*10, '/');
-}
+$vk = plant_vk();
 
 define('LAYOUT', __DIR__.'/view/layout.html');
 
@@ -32,13 +27,4 @@ list($router, $args) = get_router();
 
 run($router, $args);
 
-$f = 'runtime/visit-'.date('Ymd').'.json';
-$info = get_visit_info();
-if (isset($info[$vk])) {
-    $info[$vk]['cnt']++;
-} else {
-    $info[$vk]['cnt'] = 1;
-}
-$info[$vk]['ua'] = $_SERVER['HTTP_USER_AGENT'];
-$info[$vk]['ip'] = ip2long($_SERVER['REMOTE_ADDR']);
-file_put_contents($f, serialize($info));
+visit_count($vk);

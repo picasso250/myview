@@ -53,13 +53,43 @@ function _req($name, $default = null)
 {
     return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
 }
+function get_visit_file()
+{
+    return $f = 'runtime/visit-'.date('Ymd').'.json';
+}
 function get_visit_info()
 {
-    $f = 'runtime/visit-'.date('Ymd').'.json';
+    $f = get_visit_file();
     if (is_file($f)) {
         $info = unserialize(file_get_contents($f));
     } else {
         $info = array();
     }
     return $info;
+}
+function save_info($info) {
+    $f = get_visit_file();
+    file_put_contents($f, serialize($info));
+}
+function visit_count($vk)
+{
+    $info = get_visit_info();
+    if (isset($info[$vk])) {
+        $info[$vk]['cnt']++;
+    } else {
+        $info[$vk]['cnt'] = 1;
+    }
+    $info[$vk]['ua'] = $_SERVER['HTTP_USER_AGENT'];
+    $info[$vk]['ip'] = ip2long($_SERVER['REMOTE_ADDR']);
+    save_info($info);
+}
+function plant_vk()
+{
+    if (isset($_COOKIE['vk'])) { // visit key
+        $vk = $_COOKIE['vk'];
+    } else {
+        $vk = 'k'.md5($_SERVER['HTTP_USER_AGENT'].uniqid());
+        setcookie('vk', $vk, time()+3600*24*365*10, '/');
+    }
+    return $vk;
 }
