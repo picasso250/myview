@@ -37,10 +37,9 @@ function index() {
 	}
 }
 
-function edit($params) {
+function edit($id) {
 	global $db;
 	$table = _req('table');
-	$id = _req('id');
 	$desc = get_desc($table, true);
 	$pkey = get_pkey($table);
 	$row = $db->queryRow("SELECT * FROM $table WHERE $pkey = $id");

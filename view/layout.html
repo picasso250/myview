@@ -57,5 +57,8 @@
 </h1>
 <?php include $_inner_ ?>
 
+<footer>
+	<?= intval((microtime(true) - $GLOBALS['app_begin_time']) * 1000) ?> ms
+</footer>
 </body>
 </html>

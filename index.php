@@ -10,6 +10,8 @@ include 'logic.php';
 
 date_default_timezone_set('PRC');
 
+$app_begin_time = microtime(true);
+
 $config = require __DIR__.'/config.php';
 
 $dbname = _req('dbname');
