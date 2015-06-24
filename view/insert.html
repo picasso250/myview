@@ -1,4 +1,4 @@
-<?php include 'confirm.html'; $dbname = Service('dbname'); ?>
+<?php include 'confirm.html'; $dbname = $GLOBALS['dbname']; ?>
 
 <h1>
 	<a href="index?<?= http_build_query(compact('table', 'dbname')) ?>"><?= $table ?></a>

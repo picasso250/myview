@@ -13,7 +13,7 @@
 					<a class="order-btn" href="?<?= append_query(['asc' =>1 - _get('asc'), 'table' => $table, 'order' => $key]) ?>">
 						<?= $key ?>
 						<?php if (_get('order') == $key): ?>
-							<?= _get('asc') ? '↑' : '↓' ?>
+							<?= _get('asc') ? '↓' : '↑' ?>
 						<?php endif ?>
 					</a>
 				</th>

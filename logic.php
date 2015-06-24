@@ -57,7 +57,7 @@ function build_table_sql($table, $where = null)
 	global $db;
 	$order = _get('order');
 	$asc = _get('asc', 0);
-	$map = ['DESC', 'ASC'];
+	$map = ['ASC', 'DESC'];
 	if ($order) {
 		$order = "ORDER BY `$order` $map[$asc]";
 	} else {

@@ -60,7 +60,7 @@ function edit($id) {
 	}
 	render(__DIR__.'/view/edit.html', compact('row', 'table', 'pkey', 'confirm_sql', 'desc'), LAYOUT);
 }
-function insert($params) {
+function insert() {
 	global $db;
 	$table = _get('table');
 	$id = _get('id');
@@ -83,7 +83,7 @@ function insert($params) {
 	$keys = implode(',', array_map(function($key) {
 		return "`$key`";
 	}, array_keys($values)));
-	$val = implode(',', array_map(function ($value) {
+	$val = implode(',', array_map(function ($value) use($db) {
 		return $value === null ? 'NULL' : $db->quote($value);
 	}, $values));
 	$confirm_sql = "INSERT INTO `$table` ($keys) VALUES ($val)";
@@ -106,5 +106,21 @@ function exec_sql() {
 function visit()
 {
 	$info = get_visit_info();
-	render(__DIR__.'/view/visit.html', compact('info', 'count', 'errorInfo'), LAYOUT);
+	$time = time();
+	while (true) {
+		$Ymd = date('Ymd', $time);
+		$f = "runtime/visit-$Ymd.json";
+		if (is_file($f)) {
+			$i = (unserialize(file_get_contents($f)));
+			$table[$Ymd] = [
+				'pv' => array_sum(array_map(function($e){return $e['cnt'];}, $i)),
+				'uv' => count($i),
+			];
+		} else {
+			break;
+		}
+		$time -= 24*3600;
+	}
+	$data = compact('info', 'count', 'errorInfo', 'table');
+	render(__DIR__.'/view/visit.html', $data, LAYOUT);
 }

@@ -14,3 +14,19 @@
 	</tr>
 <?php endforeach ?>
 </table>
+<table>
+	<thead>
+		<tr>
+			<td>日期</td>
+			<td>UV</td>
+			<td>PV</td>
+		</tr>
+	</thead>
+<?php foreach ($table as $date => $v): ?>
+	<tr>
+		<td><?= $date ?></td>
+		<td><?= $v['uv'] ?></td>
+		<td><?= $v['pv'] ?></td>
+	</tr>
+<?php endforeach ?>
+</table>
