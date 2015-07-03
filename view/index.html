@@ -25,10 +25,15 @@
 </div>
 
 <div id="C">
-	<form>
+	<form method="get">
 		<input type="hidden" name="dbname" value="<?= $dbname ?>">
 		<textarea class="long" name="sql"><?= $sql ?></textarea>
-		<button>执行 SQL</button>
+		<button type="sumbit">执行 SQL</button>
+	</form>
+	<form method="get" action="csv">
+		<input type="hidden" name="dbname" >
+		<input type="hidden" name="sql" value="<?= htmlspecialchars($sql) ?>"></input>
+		<button>下载 CSV</button>
 	</form>
 	<?php if (is_not_read_only()): ?>
 	<div>

@@ -124,3 +124,25 @@ function visit()
 	$data = compact('info', 'count', 'errorInfo', 'table');
 	render(__DIR__.'/view/visit.html', $data, LAYOUT);
 }
+function csv() {
+	global $db;
+	global $config;
+	global $dbname;
+
+	$sql = _post('sql');
+	if (empty($sql) || is_read($sql)) {
+		$err = null;
+		try {
+			$table_data = $sql ? $db->queryAll($sql, $where) : [];
+		} catch (PdoException $e) {
+			$err = $e->errorInfo;
+		}
+		$file = '/tmp/'.uniqid().'.csv';
+		$f = fopen($file, 'w');
+		foreach ($table_data ?: [] as $row) {
+			fputcsv($f, $row);
+		}
+		fclose($f);
+		readfile($file);
+	}
+}
