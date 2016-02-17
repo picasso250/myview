@@ -1,5 +1,15 @@
 <?php
 
+function get_config()
+{
+    $f = __DIR__.'/config.php';
+    if (!is_file($f)) {
+        die("config file '$f' not exists\n");
+    }
+    $config = require __DIR__.'/config.php';
+    return $config;
+}
+
 function echo_json($code, $msg = 'ok')
 {
     header('Content-Type: application/json; charset=utf-8');

@@ -2,11 +2,8 @@
 <h2>数据库</h2>
 <ul>
 	<?php foreach ($GLOBALS['config']['dbnames'] as $db => $_): ?>
-		<li>
-			<a href="?dbname=<?= $db ?>">
-				<?php if ($dbname === $db) echo htmlspecialchars('>') ?>
-				<?= $db ?>
-			</a>
+		<li class="db-name-entry <?= $dbname === $db ? 'on' : '' ?>">
+			<a href="?dbname=<?= $db ?>" class="db-name <?= $dbname === $db ? 'on' : '' ?>"><?= $db ?></a>
 		</li>
 	<?php endforeach ?>
 </ul>
@@ -14,9 +11,8 @@
 <h2>表</h2>
 <ul>
 	<?php foreach ($tables as $t): ?>
-		<li>
-			<a class="table-btn" href="?<?= http_build_query(['table' => $t, 'dbname' => _get('dbname')]) ?>">
-				<?php if ($t === _get('table')) echo htmlspecialchars('>') ?>
+		<li class="table-name-entry <?= $t === _get('table') ? 'on' : '' ?>">
+			<a class="table-btn table-name <?= $t === _get('table') ? 'on' : '' ?>" href="?<?= http_build_query(['table' => $t, 'dbname' => _get('dbname')]) ?>">
 				<?= $t ?>
 			</a>
 		</li>

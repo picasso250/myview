@@ -12,7 +12,7 @@ date_default_timezone_set('PRC');
 
 $app_begin_time = microtime(true);
 
-$config = require __DIR__.'/config.php';
+$config = get_config();
 
 $dbname = _req('dbname');
 if (empty($dbname)) {
@@ -28,5 +28,3 @@ define('LAYOUT', __DIR__.'/view/layout.html');
 list($router, $args) = get_router();
 
 run($router, $args);
-
-visit_count($vk);
